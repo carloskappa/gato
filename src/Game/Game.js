@@ -80,50 +80,43 @@ class Game extends Component {
 
   minimax(board, depth, player) {
     const isGameOver = this.calculateWinner(board);
-    if (isGameOver === false) {
-      const moves = [];
-      for (let i = 0; i < board.length; i++) {
-        const checkValid = this.checkValidMove(i, board, player);
-        if (checkValid) {
-          const value = this.minimax(
-            checkValid,
-            depth + 1,
-            player === this.state.player ? this.state.cpu : this.state.player
-          );
-          moves.push({
-            score: value,
-            index: i
-          });
-        }
-      }
-
-      if (player === this.state.cpu) {
-        const maxValue = moves.reduce(
-          (a, b) => (a.score >= b.score ? a : b),
-          {}
-        );
-        if (depth === 0) {
-          return maxValue.index;
-        } else {
-          return maxValue.score;
-        }
-      } else {
-        const minValue = moves.reduce(
-          (a, b) => (a.score <= b.score ? a : b),
-          {}
-        );
-        if (depth === 0) {
-          return minValue.index;
-        } else {
-          return minValue.score;
-        }
-      }
-    } else if (isGameOver === null) {
+    if (isGameOver === null) {
       return 0;
     } else if (isGameOver === this.state.player) {
       return depth - 10;
     } else if (isGameOver === this.state.cpu) {
       return 10 - depth;
+    }
+    const moves = [];
+    for (let i = 0; i < board.length; i++) {
+      const checkValid = this.checkValidMove(i, board, player);
+      if (checkValid) {
+        const value = this.minimax(
+          checkValid,
+          depth + 1,
+          player === this.state.player ? this.state.cpu : this.state.player
+        );
+        moves.push({
+          score: value,
+          index: i
+        });
+      }
+    }
+
+    if (player === this.state.cpu) {
+      const maxValue = moves.reduce((a, b) => (a.score >= b.score ? a : b), {});
+      if (depth === 0) {
+        return maxValue.index;
+      } else {
+        return maxValue.score;
+      }
+    } else {
+      const minValue = moves.reduce((a, b) => (a.score <= b.score ? a : b), {});
+      if (depth === 0) {
+        return minValue.index;
+      } else {
+        return minValue.score;
+      }
     }
   }
 
